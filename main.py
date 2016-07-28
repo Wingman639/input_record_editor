@@ -1,17 +1,17 @@
 # -*- coding:UTF-8 -*-
 import wx
-# import buttonPanel
-# import search
 import time
+from record_data import InputRecord
 
 START_TIMESTAMP = time.time()
 
 
 class ClientFrame(wx.Frame):
-    def __init__(self):
+    def __init__(self, record_data):
         wx.Frame.__init__(
             self, None, -1, u'Editor', size=(1000, 600)
             )
+        self.record_data = record_data
         self.sourceFiles = []
         self.files = []
         self.folderPath = ''
@@ -57,16 +57,11 @@ class ClientFrame(wx.Frame):
 
     #########################
     def bindEvents(self):
-        pass
-        # self.buttonBox.buttonOpenFile.Bind(wx.EVT_BUTTON,
-        #                                    self.onFileOpenButtonClick)
-        # self.buttonBox.buttonSearch.Bind(wx.EVT_BUTTON,
-        #                                  self.onFileSearchButtonClick)
         self.mainText.Bind(wx.EVT_TEXT, self.onMainTextInput)
 
     #########################
     def onMainTextInput(self, event):
-        print event.String, time.time() - START_TIMESTAMP
+        self.record_data.save_record(event.String)
 
     #########################
     def showAppendMainText(self, text):
@@ -158,11 +153,15 @@ class ClientFrame(wx.Frame):
         self.showAppendMainText(result_output)
 
 
-def main():
+def run_window(record_data):
     app = wx.PySimpleApp()
-    frame = ClientFrame()
+    frame = ClientFrame(record_data)
     frame.Show(True)
     app.MainLoop()
+
+def main():
+    with InputRecord() as record_data:
+        run_window(record_data)
 
 if __name__ == '__main__':
     main()

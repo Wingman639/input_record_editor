@@ -9,11 +9,11 @@ class InputRecord(object):
 
 
 	def __enter__(self):
-		self._save_record('RECORD_START')
+		self.save_record('RECORD_START')
 		return self
 
 	def __exit__(self, exception_type, exception_value, traceback):
-		self._save_record('RECORD_END')
+		self.save_record('RECORD_END')
 		pass
 
 	def _generate_file_path(self):
@@ -28,7 +28,7 @@ class InputRecord(object):
 		with open(self.file_path, 'a', ) as f:
 			f.write(text)
 
-	def _save_record(self, text):
+	def save_record(self, text):
 		record_item = [text, time.time()]
 		line = str(record_item) + '\n'
 		self._append_save(line)

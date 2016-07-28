@@ -1,4 +1,7 @@
 test_files/
+build/
+dist/
+temp/
 *.txt
 *.pyc
 *.data
