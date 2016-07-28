@@ -100,7 +100,7 @@ class ClientFrame(wx.Frame):
         records_lines = lines[1:-1]
         self.replay_records(records_lines)
         end_line = lines[-1]
-        self.showAppendInfo(end_line)
+        self.showAppendInfo('\n' + end_line)
 
 
     def replay_records(self, records_lines):
@@ -164,8 +164,10 @@ class ClientFrame(wx.Frame):
             return
         try:
             self.infoText.SetValue(text)
+            self.infoText.Update()
         except Exception, e:
             self.infoText.SetValue(str(e))
+            self.infoText.Update()
 
     def showStatus(self, text):
         self.statusBar.SetStatusText(text, 0)
