@@ -6,3 +6,6 @@ I wish the editor can replay the text change with original time gap as text was 
 
 To make windows exe file:
 python my_setup.py py2exe
+
+input_recroder.py is the recorder
+replay.py is the player

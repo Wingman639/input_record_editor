@@ -66,7 +66,10 @@ class ClientFrame(wx.Frame):
 
     #########################
     def onFileOpenButtonClick(self, evt):
+        wildcard = "Data files (*.data)|*.data|" \
+                   "All files (*.*)|*.*"
         dlg = wx.FileDialog(self, u'open recording file',
+                            wildcard=wildcard,
                             style=wx.OPEN | wx.CHANGE_DIR
                             )
         if dlg.ShowModal() == wx.ID_OK:

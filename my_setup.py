@@ -12,7 +12,7 @@ options = {"py2exe":
 setup(
     windows = [
     {
-        "script": "main.py",
+        "script": "input_recroder.py",
 #        "icon_resources": [(1, "ico/rename.ico")]
     }
     ],
