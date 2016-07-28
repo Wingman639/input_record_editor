@@ -2,6 +2,7 @@
 import wx
 import time
 import buttonPanel
+import checksum
 
 
 START_TIMESTAMP = time.time()
@@ -36,8 +37,6 @@ class ClientFrame(wx.Frame):
 
         self.mainText = wx.TextCtrl(mainPanel, -1, style=wx.TE_MULTILINE | wx.TE_PROCESS_TAB)
         mainSizer.Add(self.mainText, proportion= 1, flag=wx.TOP | wx.EXPAND, border=5)
-        #self.grid = grid.FileTableGrid(mainPanel)
-        #mainSizer.Add(self.grid, proportion= 1, flag=wx.TOP | wx.EXPAND,  border=5)
 
         mainPanel.SetSizer(mainSizer)
         return mainPanel
@@ -62,7 +61,6 @@ class ClientFrame(wx.Frame):
                                            self.onFileOpenButtonClick)
         self.buttonBox.buttonPlay.Bind(wx.EVT_BUTTON,
                                          self.onFileOpenPlayClick)
-        #self.mainText.Bind(wx.EVT_TEXT, self.onMainTextChange)
 
     #########################
     def onFileOpenButtonClick(self, evt):
@@ -74,9 +72,11 @@ class ClientFrame(wx.Frame):
                             )
         if dlg.ShowModal() == wx.ID_OK:
             self.folderPath = None
+            self.clean()
             self.file_path = dlg.GetPath()
             self.showAppendInfo(self.file_path)
-            #self.openFile(self.file_path)
+            output = checksum.check_checksum(self.file_path)
+            self.showAppendInfo(output)
         dlg.Destroy()
 
     def onFileOpenPlayClick(self, evt):
@@ -90,16 +90,12 @@ class ClientFrame(wx.Frame):
 
     def replay(self, file_path):
         text = self.read_file(file_path)
-        #self.lines = text.splitlines()
-        #start_line = self.lines[0]
         lines = text.splitlines()
         start_line = lines[0]
         self.init_start_time(start_line)
-        self.line_index = 0
-        #self.replay_one_step()
-        records_lines = lines[1:-1]
+        records_lines = lines[1:-2]
         self.replay_records(records_lines)
-        end_line = lines[-1]
+        end_line = lines[-2]
         self.showAppendInfo('\n' + end_line)
 
 
@@ -128,10 +124,9 @@ class ClientFrame(wx.Frame):
         with open(file_path, 'r') as f:
             return f.read()
 
-    def replay_one_step(self):
-        self.line_index += 1
-        line = self.lines[self.line_index]
-        self.show_one_step(line)
+
+
+
 
     #########################
     def showAppendMainText(self, text):
@@ -173,9 +168,17 @@ class ClientFrame(wx.Frame):
         self.statusBar.SetStatusText(text, 0)
 
     #########################
+    def clean(self):
+        self.cleanMainText()
+        self.cleanInfoText()
+
     def cleanMainText(self):
         self.mainText.Value = ''
         self.mainText.Update()
+
+    def cleanInfoText(self):
+        self.infoText.Value = ''
+        self.infoText.Update()
 
     #########################
     def show_result(self, file_path, result):
