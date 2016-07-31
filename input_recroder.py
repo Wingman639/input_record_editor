@@ -4,6 +4,7 @@ import time
 from record_data import InputRecord
 
 START_TIMESTAMP = time.time()
+CTRL_EFFECT_TIME = 0.2
 
 
 class ClientFrame(wx.Frame):
@@ -11,6 +12,7 @@ class ClientFrame(wx.Frame):
         wx.Frame.__init__(
             self, None, -1, u'Editor', size=(1000, 600)
             )
+        self.ctrl_time = 0
         self.record_data = record_data
         self.sourceFiles = []
         self.files = []
@@ -56,10 +58,21 @@ class ClientFrame(wx.Frame):
     #########################
     def bindEvents(self):
         self.mainText.Bind(wx.EVT_TEXT, self.onMainTextInput)
+        self.mainText.Bind(wx.EVT_KEY_DOWN, self.onMainTextKeyDown)
 
     #########################
     def onMainTextInput(self, event):
         self.record_data.save_record(event.String)
+
+    def onMainTextKeyDown(self, event):
+        if event.CmdDown():
+            self.ctrl_time = time.time()
+        if event.GetKeyCode() == ord('B') and self.ctrl_time:
+            if time.time() - self.ctrl_time < CTRL_EFFECT_TIME:
+                self.infoText.AppendText('Ctrl+B')
+
+
+
 
     #########################
 
